@@ -1,0 +1,126 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PACCHETTI FONDAMENTALI ---
+\usepackage[utf8]{inputenc}   % Permette di scrivere caratteri accentati direttamente da tastiera
+\usepackage[T1]{fontenc}      % Migliora la qualità dei font nel PDF finale
+\usepackage[italian]{babel}   % Abilita la sillabazione e i termini in italiano (es. "Sezione")
+
+% --- GEOMETRIA E LAYOUT ---
+\usepackage{geometry}         % Per una facile impostazione dei margini
+\geometry{a4paper, margin=2.5cm} % Margini uniformi, adatti alla lettura
+\linespread{1.2}              % Aumenta l'interlinea per una migliore leggibilità
+
+% --- PACCHETTI UTILI ---
+\usepackage{graphicx}         % Per inserire immagini (es. schemi ER)
+\usepackage{amsmath}          % Per scrivere formule matematiche
+\usepackage{hyperref}         % Rende i riferimenti interni (sommario, citazioni) cliccabili
+\usepackage{xcolor}           % Per usare i colori (necessario per il codice)
+\usepackage{listings}         % Per inserire blocchi di codice formattati
+\usepackage{booktabs}         % Necessario per \toprule, \midrule e \bottomrule
+
+\title{
+    \vspace{-2cm} % Spazio negativo per alzare il titolo
+    \fontsize{18pt}{22pt}\selectfont
+    \textbf{Progetto - Basi di Dati}
+}
+\author{
+    \large
+    \textbf{Studenti:} \\ Giovanni Veronese \\ Sebastiano Lorenzi \\
+    \vspace{2cm} \\
+    \normalsize
+    Prof. Massimiliano De Leoni \\
+    \vspace{0.5cm}
+    Corso di Laurea Informatica \\
+}
+\date{\textbf{Anno Accademico:} 2025-2026}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,      % Colore dei link interni (sommario, etc.)
+    urlcolor=blue,        % Colore dei link web
+    pdftitle={Relazione Progetto: Titolo del Progetto},
+    pdfauthor={Nome Cognome},
+    pdfsubject={Relazione per il corso di Nome Corso},
+    bookmarks=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=2
+}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{sqlstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=sqlstyle, language=SQL} % Imposta lo stile e il linguaggio di default
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+
+\tableofcontents
+\thispagestyle{empty}
+
+\newpage
+\setcounter{page}{1} % La numerazione delle pagine riparte da 1
+
+\section{Introduzione}
+\label{sec:introduzione}
+Introduzione al progetto, idea ecc..
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llcl}
+\toprule
+\textbf{Attributo} & \textbf{Chiave} & \textbf{Tipo} & \textbf{Vincoli e Dominio} \\
+\midrule
+cf\_donatore & PK & CHAR(16) &  Regex alfanumerico \\
+nome            && VARCHAR(64)  & NOT NULL \\
+cognome          & & VARCHAR(64)  & NOT NULL \\
+gruppo\_sanguigno & & ENUM         & Valori: 'A', 'B', 'AB', '0' \\
+fattore\_rh       & & CHAR(1)      & IN ('+', '-') \\
+telefono         & & VARCHAR(15)   & Formato E.164 \\
+\bottomrule
+\end{tabular}
+\caption{Dizionario dei dati: Entità DONATORE}
+\end{table}
+
+\subsection{Esempio di Query SQL}
+Esempio di codice SQL
+
+\begin{lstlisting}[caption={Esempio di riquadro in SQL}, label={}]
+-- Seleziona il nome del paziente e conta le sue visite
+SELECT
+    p.Nome,
+    p.Cognome,
+    COUNT(v.ID_Visita) AS NumeroVisite
+FROM Paziente AS p
+JOIN Visita AS v ON p.ID_Paziente = v.ID_Paziente
+WHERE v.DataVisita >= '2023-01-01'
+GROUP BY p.ID_Paziente, p.Nome, p.Cognome
+ORDER BY NumeroVisite DESC;
+\end{lstlisting}
+
+\section{Conclusioni}
+\label{sec:conclusioni}
+Testo conclusioni
+\end{document}
