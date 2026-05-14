@@ -14,7 +14,7 @@ OSPADALE{
 }
 
 CENTRO_PRELIEVI{
-    id_centro_prelievi 🔑 VARCHAR(64) not null <!-- vincolo: unico -->
+    id_centro 🔑 VARCHAR(64) not null <!-- vincolo: unico -->
     nome VARCHAR(128)
     civico VARCHAR(16) not null
     via VARCHAR(128) not null
@@ -52,7 +52,7 @@ PRELIEVO{
 SACCA{
     id_sacca 🔑 INT(64) not null <!-- vincolo: unico, incrementale automatico -->
     id_prelievo 🔗 INT(64) not null  <!-- collegato a PRELIEVO -->
-    contenuto ENUM [Valori: 'Sangue intero', 'Plasmaferesi'] not null
+    contenuto ENUM [Valori: 'Sangue intero', 'Plasma'] not null
     gruppo_sanguigno ENUM [Valori: 'A', 'B', 'AB', '0'] not null
     fattore_rh ENUM [Valori: '+', '-'] not null
     data_scadenza TIMESTAMP(YYYY:MM:DD, HH:MM) <!-- non ricavabile tramite operazioni matematiche per legge -->
@@ -66,6 +66,7 @@ RICHIESTA_SANGUE{
     cf_medico_richiedente CHAR(16) not null <!-- per motivi di tracciabilità e trasparenza -->
     data_richiesta TIMESTAMP(YYYY:MM:DD, HH:MM) <!-- Formato per l'orario senza fuso orario, GIORNO:MESE , ORE:MINUTI -->
     quantita_sacche INT(32) not null <!-- CHECK: 0 < quantità sacche <= 32 >> -->
+    emocomponente_richiesto ENUM [Valori: 'Sangue intero', 'Plasma'] not null
     tipo_operazione ENUM [Valori: 'Pronto Soccorso', 'Chirurgia', 'Oncologia ed Ematologia', 'Ostetricia', 'Terapia Intensiva e Rianimazione', 'Degenza ordinaria']
     stato ENUM [Valori: 'Non evasa', 'Evasa parzialmente', 'Soddisfatta', 'Annullata'] <!-- default: non evasa -->
 }
@@ -77,7 +78,6 @@ TRASFERIMENTO{
     id_ospedale_destinatario 🔗 VARCHAR(64) not null <!-- collegato a OSPEDALE -->
     data_spedizione TIMESTAMP(YYYY:MM:DD, HH:MM) not null
     data_arrivo TIMESTAMP(YYYY:MM:DD, HH:MM) not null
-    stato_spedizione ENUM [Valori: 'In elaborazione', 'Consegnata', 'In transito'] <!-- default: In elaborazione -->
 }
 
 TRASFUSIONE{
