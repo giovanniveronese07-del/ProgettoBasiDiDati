@@ -1,5 +1,8 @@
 # abstract
 
+1. il sangue intero non viene diviso nei suoi tre emocomponenti ma resta la dicitura "sangue intero"
+2. il trasporto porta una sola sacca di sangue o plasma per viaggio, non c'è un ddt che accorpa i colli
+3. il tempo di attesa dopo plasmaferesi e sangue intero è lo stesso nel progetto, ma nella realtà è differente
 
 # popolazione delle tabelle
 ## OSPEDALE
@@ -129,13 +132,13 @@ CREATE TABLE PRELIEVO (
         FOREIGN KEY (id_ospedale, id_centro) REFERENCES CENTRO_PRELIEVI(id_ospedale, id_centro)
 );
 
-id:
+id: 
 
-cf_donatore:
+cf_donatore: 
 
-id_centro:
+id_centro: 
 
-id_ospedale:
+id_ospedale: 
 
 data_ora: 
 

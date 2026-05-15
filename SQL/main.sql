@@ -1,9 +1,3 @@
-/*
-limiti logici e strutturali del progetto: 
-- il sangue intero non viene diviso nei suoi tre emocomponenti ma resta la dicitura "sangue intero"
-- il trasporto porta una sola sacca di sangue o plasma per viaggio, non c'è un ddt che accorpa i colli
-*/
-
 CREATE TYPE gruppo_sanguigno_enum AS ENUM ('A', 'B', 'AB', '0');
 CREATE TYPE fattore_rh_enum AS ENUM ('+', '-');
 CREATE TYPE emocomponente_enum AS ENUM ('Sangue intero', 'Plasma');
