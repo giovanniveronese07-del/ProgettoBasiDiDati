@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Pagina-1" id="leJEnF4BrLtKWi7ts1Tf">
-    <mxGraphModel dx="957" dy="2026" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="630" dy="2026" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -190,13 +190,13 @@
             <mxPoint x="410" y="300" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="IZLIKkRorrJyTeQJ3G4D-55" edge="1" parent="1" source="IZLIKkRorrJyTeQJ3G4D-11" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="IZLIKkRorrJyTeQJ3G4D-6" value="(1,1)">
+        <mxCell id="IZLIKkRorrJyTeQJ3G4D-55" edge="1" parent="1" source="IZLIKkRorrJyTeQJ3G4D-11" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="IZLIKkRorrJyTeQJ3G4D-6" value="(1,N)">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="360" y="350" as="sourcePoint" />
             <mxPoint x="410" y="300" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="IZLIKkRorrJyTeQJ3G4D-56" edge="1" parent="1" source="IZLIKkRorrJyTeQJ3G4D-7" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="IZLIKkRorrJyTeQJ3G4D-11" value="(1,N)">
+        <mxCell id="IZLIKkRorrJyTeQJ3G4D-56" edge="1" parent="1" source="IZLIKkRorrJyTeQJ3G4D-7" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="IZLIKkRorrJyTeQJ3G4D-11" value="(1,1)">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="360" y="350" as="sourcePoint" />
             <mxPoint x="410" y="300" as="targetPoint" />
