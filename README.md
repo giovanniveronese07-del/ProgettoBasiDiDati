@@ -1,24 +1,24 @@
-\# Base di Dati di un Sistema Informativo per la Gestione della Donazione del Sangue
+# Base di Dati di un Sistema Informativo per la Gestione della Donazione del Sangue
 
 
 
-\## Indice
+## Indice
 
 
 
-1\. Abstract  
+1. Abstract  
 
-2\. Analisi dei Requisiti  
+2. Analisi dei Requisiti  
 
-3\. Progettazione Concettuale  
-
-
-
-\---
+3. Progettazione Concettuale  
 
 
 
-\# 1 Abstract
+---
+
+
+
+# 1 Abstract
 
 
 
@@ -38,11 +38,11 @@ Questa base di dati è progettata per garantire un’archiviazione efficiente e 
 
 
 
-\---
+---
 
 
 
-\# 2 Analisi dei Requisiti
+# 2 Analisi dei Requisiti
 
 
 
@@ -50,21 +50,21 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 
 
 
-\## Donatori
+## Donatori
 
 
 
 Ogni donatore è identificato tramite:
 
-\- Codice fiscale.
+- Codice fiscale.
 
-\- Nominativo.
+- Nominativo.
 
-\- Numero di telefono.
+- Numero di telefono.
 
-\- Gruppo sanguigno.
+- Gruppo sanguigno.
 
-\- Fattore Rh.
+- Fattore Rh.
 
 
 
@@ -72,103 +72,104 @@ Un donatore può effettuare più prelievi in momenti differenti.
 
 
 
-\---
+---
 
 
 
-\## Prelievi
+## Prelievi
 
 
 
 Ogni prelievo è identificato da:
 
-\- ID\_prelievo.
+- ID_prelievo.
 
-\- Data del prelievo.
+- Data del prelievo.
 
 
 
 Ogni prelievo:
 
-\- è effettuato da un solo donatore;
+- è effettuato da un solo donatore;
 
-\- viene eseguito presso un centro prelievi;
+- viene eseguito presso un centro prelievi;
 
-\- genera una sola sacca.
-
-
-
-\---
+- genera una sola sacca.
 
 
 
-\## Centri Prelievi
+
+---
+
+
+
+## Centri Prelievi
 
 
 
 Ogni centro prelievi è identificato da:
 
-\- ID\_centro.
+- ID_centro.
 
-\- Nome.
+- Nome.
 
-\- Indirizzo.
+- Indirizzo.
 
 
 
 L’indirizzo contiene:
 
-\- Via.
+- Via.
 
-\- Civico.
+- Civico.
 
-\- CAP.
+- CAP.
 
-\- Città.
+- Città.
 
-\- Provincia.
+- Provincia.
 
 
 
 Ogni centro prelievi può:
 
-\- eseguire più prelievi;
+- eseguire più prelievi;
 
-\- rifornire un solo ospedale.
-
-
-
-\---
+- rifornire un solo ospedale.
 
 
 
-\## Sacche
+---
+
+
+
+## Sacche
 
 
 
 Ogni sacca è identificata da:
 
-\- ID\_sacca.
+- ID_sacca.
 
-\- Gruppo sanguigno.
+- Gruppo sanguigno.
 
-\- Fattore Rh.
+- Fattore Rh.
 
-\- Stato della sacca.
+- Stato della sacca.
 
-\- Data di scadenza.
+- Data di scadenza.
 
 
 
 Lo stato della sacca può assumere valori differenti, come:
 
-\- in attesa;
+- in attesa;
 
-\- disponibile;
+- disponibile;
 
-\- prenotata;
+- prenotata;
 
-\- utilizzata.
+- utilizzata.
 
 
 
@@ -178,93 +179,93 @@ Ogni sacca viene generata da un solo prelievo.
 
 Le sacche si distinguono in:
 
-\- sangue;
+- sangue;
 
-\- plasma.
+- plasma.
 
 
 
 Una sacca può:
 
-\- essere immagazzinata in un ospedale;
+- essere immagazzinata in un ospedale;
 
-\- essere contenuta in un trasferimento;
+- essere contenuta in un trasferimento;
 
-\- essere utilizzata in una trasfusione.
-
-
-
-\---
+- essere utilizzata in una trasfusione.
 
 
 
-\## Ospedali
+---
+
+
+
+## Ospedali
 
 
 
 Ogni ospedale è identificato da:
 
-\- ID\_ospedale.
+- ID_ospedale.
 
-\- Nome.
+- Nome.
 
-\- Indirizzo.
+- Indirizzo.
 
 
 
 L’indirizzo contiene:
 
-\- Via.
+- Via.
 
-\- Civico.
+- Civico.
 
-\- CAP.
+- CAP.
 
-\- Città.
+- Città.
 
-\- Provincia.
+- Provincia.
 
 
 
 Ogni ospedale può:
 
-\- ricevere trasferimenti;
+- ricevere trasferimenti;
 
-\- spedire trasferimenti;
+- spedire trasferimenti;
 
-\- immagazzinare sacche;
+- immagazzinare sacche;
 
-\- ricoverare pazienti.
-
-
-
-\---
+- ricoverare pazienti.
 
 
 
-\## Trasferimenti
+---
+
+
+
+## Trasferimenti
 
 
 
 Ogni trasferimento è identificato da:
 
-\- ID\_spedizione.
+- ID_spedizione.
 
-\- Data di spedizione.
+- Data di spedizione.
 
-\- Data di arrivo.
+- Data di arrivo.
 
-\- Stato della spedizione.
+- Stato della spedizione.
 
 
 
 Ogni trasferimento:
 
-\- contiene una o più sacche;
+- contiene una o più sacche;
 
-\- viene spedito da un ospedale;
+- viene spedito da un ospedale;
 
-\- viene ricevuto da un ospedale.
+- viene ricevuto da un ospedale.
 
 
 
@@ -272,23 +273,23 @@ Un ospedale può spedire più trasferimenti e può riceverne più di uno.
 
 
 
-\---
+---
 
 
 
-\## Pazienti
+## Pazienti
 
 
 
 Ogni paziente è identificato tramite:
 
-\- Codice fiscale.
+- Codice fiscale.
 
-\- Nominativo.
+- Nominativo.
 
-\- Gruppo sanguigno.
+- Gruppo sanguigno.
 
-\- Fattore Rh.
+- Fattore Rh.
 
 
 
@@ -296,67 +297,68 @@ Un paziente può essere ricoverato in più ospedali nel tempo.
 
 
 
-\---
+---
 
 
 
-\## Richieste di sangue
+## Richieste di sangue
 
 
 
 Ogni richiesta di sangue è identificata da:
 
-\- ID\_richiesta.
+- ID_richiesta.
 
-\- Quantità richiesta.
+- Quantità richiesta.
 
-\- Emocomponente.
+- Emocomponente.
 
-\- Tipo operazione.
+- Tipo operazione.
 
-\- Stato.
+- Stato.
 
-\- CF del medico.
+- CF del medico.
 
 
 
 Ogni richiesta:
 
-\- appartiene a un paziente;
+- appartiene a un paziente;
 
-\- può portare a una trasfusione.
-
-
-
-\---
+- può portare a una trasfusione.
 
 
 
-\## Trasfusioni
+---
+
+
+
+## Trasfusioni
 
 
 
 Ogni trasfusione è identificata da:
 
-\- ID\_trasfusione.
+- ID_trasfusione.
 
-\- Data della trasfusione.
+- Data della trasfusione.
 
 
 
 Ogni trasfusione:
 
-\- utilizza una sola sacca;
-
-\- deriva da una richiesta di sangue.
+- utilizza una sola sacca;
 
 
-
-\---
+- deriva da una richiesta di sangue.
 
 
 
-\# 3 Progettazione Concettuale
+---
+
+
+
+# 3 Progettazione Concettuale
 
 
 
