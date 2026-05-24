@@ -174,14 +174,15 @@ void query1(PGconn *conn) {
 
 void query2(PGconn *conn){
     PGresult *res;
+
     char *query = 
         "SELECT o.provincia, s.gruppo_sanguigno, fattore_rh, COUNT(*) AS num_scorte"
-        "FROM ospedali o JOIN sacche s ON o.id = s.id_ospedale"
+        "FROM ospedale o JOIN sacca s ON o.id = s.id_ospedale"
         "WHERE s.stato = 'disponibile'"
         "GROUP BY o.provincia, s.gruppo_sanguigno, fattore_rh"
         "ORDER BY o.provincia, s.gruppo_sanguigno, fattore_rh;";
 
-    res = PQexec(conn,res);
+    res = PQexec(conn,query);
 
     printResult(res);
 

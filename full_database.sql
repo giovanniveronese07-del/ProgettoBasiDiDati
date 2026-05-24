@@ -480,7 +480,7 @@ INSERT INTO DONATORE (cf, nome, cognome, gruppo_sanguigno, fattore_rh, numero_di
     ('NDTFRN79H14D205X', 'Matteo', 'Pellizzari', '0', '+', '+393475869201'),
     ('TGVLRT91L52M312S', 'Elena', 'Vitali', 'A', '+', '3348576920'),
     ('JSNFHR85M27L219P', 'Alessandro', 'Masi', '0', '+', '+393804958671'),
-    ('RLTFFMR78P05D205W', 'Luca', 'Rizzo', 'A', '-', '3384756291'),
+    ('RLTFMR78P05D205W', 'Luca', 'Rizzo', 'A', '-', '3384756291'),
     ('GPMNSM92R64H501V', 'Giorgia', 'Giordano', '0', '+', '+393495867123'),
     ('ZDRQCN81S49M312X', 'Sabrina', 'Perrone', 'B', '-', '3409827364'),
     ('KTRLRR88T11L219T', 'Federico', 'Lombardo', 'A', '+', '+393338475612'),
