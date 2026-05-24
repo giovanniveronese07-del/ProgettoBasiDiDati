@@ -541,9 +541,13 @@ Lo schema relazionale ottenuto è il seguente:
 
 - PRELIEVO(id, cf_donatore, id_ospedale, nome, data_ora)
 
-- SACCA(id, contenuto, id_prelievo, gruppo_sanguigno, fattore_rh, data_scadenza, stato_sacca, id_trasferimento)
+- SACCA(id, contenuto, id_prelievo, gruppo_sanguigno, fattore_rh, data_scadenza, stato_sacca, idOspedale, id_trasferimento)
+  SACCA.id_ospedale → OSPEDALE.id
+  SACCA.id_trasferimento → TRASFERIMENTO.id
 
 - TRASFERIMENTO(id, id_ospedale_mittente, id_ospedale_destinatario, data_spedizione, data_arrivo)
+  TRASFERIMENTO.id_ospedale_mittente → OSPEDALE.id
+  TRASFERIMENTO.id_ospedale_destinatario → OSPEDALE.id
 
 - RICHIESTA_SANGUE(id, cf_medico_richiedente, cf_paziente, id_ospedale_ricovero, data_richiesta, quantita_sacche, emocomponente_richiesto, reparto_destinazione, stato)
   RICHIESTA_SANGUE.cf_paziente → PAZIENTE.cf

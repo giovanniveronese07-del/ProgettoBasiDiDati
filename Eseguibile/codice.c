@@ -6,7 +6,7 @@
 #define PG_HOST "127.0.0.1"
 #define PG_USER "postgres"
 #define PG_DB "BancadelSangue"
-#define PG_PASS "GiovaVero04."
+#define PG_PASS ""
 #define PG_PORt 5432*/
 
 #define COL_WIDTH 30
@@ -25,6 +25,7 @@ void query5(PGconn *conn);
 
 
 int main(int argc, char **argv){
+
     //connessione al server
     char PG_host[50];
     char PG_user[50];
@@ -117,16 +118,76 @@ void do_exit(PGconn *conn){
 
 void printMenu(){
     printf("\n====== MENU QUERY ======\n");
-    printf("1.\n");
-    printf("2.\n");
-    printf("3.\n");
-    printf("4.\n");
-    printf("5.\n");
+    printf("1. Gruppi sanguigni sotto soglia minima per ospedale\n");
+    printf("2. Distribuzione delle scorte per provincia\n");
+    printf("3. Sacche prossime alla scadenza\n");
+    printf("4. Tipi di sangue più richiesti per città\n");
+    printf("5. Ospedali con più richieste non evase\n");
     printf("0. Esci\n");
 }
 
-void query1(PGconn *conn){}
-void query2(PGconn *conn){}
+void query1(PGconn *conn) {
+    PGresult *res;
+    //creazione query
+    char *query =
+        "SELECT o.nome, s.gruppo_sanguigno, s.fattore_rh, COUNT(*) AS numero_sacche "
+        "FROM sacca s JOIN ospedale o ON s.id_ospedale = o.id "
+        "WHERE s.stato_sacca = 'Disponibile' "
+        "GROUP BY o.nome, s.gruppo_sanguigno, s.fattore_rh "
+        "HAVING COUNT(*) < $1 "
+        "ORDER BY o.nome, s.gruppo_sanguigno, s.fattore_rh;";
+
+    //preparo la query a Postgre
+    res = PQprepare(conn, "query1", query, 1, NULL);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        printf("Errore nella preparazione della query: %s\n", PQerrorMessage(conn));
+        PQclear(res);
+        return;
+    }
+
+    PQclear(res);
+
+    //creo il parametro
+    int limite;
+    printf("Inserire la soglia minima di sacche: ");
+    scanf("%d", &limite);
+
+    char limite_str[16];
+    snprintf(limite_str, sizeof(limite_str), "%d", limite);
+
+    const char *paramValues[1] = { limite_str };
+
+    //eseguo la query
+    res = PQexecPrepared(conn, "query1", 1, paramValues, NULL, NULL, 0);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        printf("Errore nell'esecuzione della query: %s\n", PQerrorMessage(conn));
+        PQclear(res);
+        return;
+    }
+
+    //stampo il risultato
+    printResult(res);
+    PQclear(res);
+}
+
+void query2(PGconn *conn){
+    PGresult *res;
+    char *query = 
+        "SELECT o.provincia, s.gruppo_sanguigno, fattore_rh, COUNT(*) AS num_scorte"
+        "FROM ospedali o JOIN sacche s ON o.id = s.id_ospedale"
+        "WHERE s.stato = 'disponibile'"
+        "GROUP BY o.provincia, s.gruppo_sanguigno, fattore_rh"
+        "ORDER BY o.provincia, s.gruppo_sanguigno, fattore_rh;";
+
+    res = PQexec(conn,res);
+
+    printResult(res);
+
+    PQclear(res);
+}
+
 void query3(PGconn *conn){}
 void query4(PGconn *conn){}
 void query5(PGconn *conn){}
@@ -134,7 +195,8 @@ void query5(PGconn *conn){}
 
 
 void printResult(PGresult *res){
-    //trovo il numero di tuple e campi selezinati
+
+    //trovo il numero di tuple e campi selezionati
     int tuple = PQntuples(res);
     int campi = PQnfields(res);
 
