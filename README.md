@@ -526,33 +526,36 @@ La relazione Contiene tra Trasferimento e Sacca non è stata tradotta mediante u
 
 Lo schema relazionale ottenuto è il seguente:
 
-- OSPEDALE(id, nome, civico, via, citta, provincia, cap)\
+- OSPEDALE(id, nome, civico, via, citta, provincia, cap)
 
-- CENTRO_PRELIEVI(id_ospedale, nome, nome, civico, via, citta, provincia, cap)
-  CENTRO_PRELIEVI.id_ospedale → OSPEDALE.id
+- CENTRO_PRELIEVI(nome, civico, via, citta, provincia, cap, id_ospedale)
+  id_ospedale → OSPEDALE(id)
 
 - DONATORE(cf, nome, cognome, gruppo_sanguigno, fattore_rh, numero_di_telefono)
 
 - PAZIENTE(cf, nome, cognome, gruppo_sanguigno, fattore_rh)
 
-- RICOVERO(cf_paziente, id_ospedale, data_ricovero, reparto)
-  RICOVERO.cf_paziente → PAZIENTE.cf
-  RICOVERO.id_ospedale → OSPEDALE.id
+- RICOVERA(cf_paziente, id_ospedale, data_inizio, data_fine)
+  cf_paziente → PAZIENTE(cf)
+  id_ospedale → OSPEDALE(id)
 
-- PRELIEVO(id, cf_donatore, id_ospedale, nome, data_ora)
+- PRELIEVO(id, cf_donatore, nome_centro_prelievi, id_ospedale, data_ora)
+  cf_donatore → DONATORE(cf)
+  (id_ospedale, nome_centro_prelievi) → CENTRO_PRELIEVI(id_ospedale, nome)
 
-- SACCA(id, contenuto, id_prelievo, gruppo_sanguigno, fattore_rh, data_scadenza, stato_sacca, idOspedale, id_trasferimento)
-  SACCA.id_ospedale → OSPEDALE.id
-  SACCA.id_trasferimento → TRASFERIMENTO.id
+- SACCA(id, contenuto, id_prelievo, id_ospedale, gruppo_sanguigno, fattore_rh, data_scadenza, stato_sacca)
+  id_prelievo → PRELIEVO(id)
+  
 
-- TRASFERIMENTO(id, id_ospedale_mittente, id_ospedale_destinatario, data_spedizione, data_arrivo)
-  TRASFERIMENTO.id_ospedale_mittente → OSPEDALE.id
-  TRASFERIMENTO.id_ospedale_destinatario → OSPEDALE.id
+- TRASFERIMENTO(id, id_sacca, id_ospedale_mittente, id_ospedale_destinatario, data_spedizione, data_arrivo)
+  id_sacca → SACCA(id)
+  id_ospedale_mittente → OSPEDALE(id)
+  id_ospedale_destinatario → OSPEDALE(id)
 
 - RICHIESTA_SANGUE(id, cf_medico_richiedente, cf_paziente, id_ospedale_ricovero, data_richiesta, quantita_sacche, emocomponente_richiesto, reparto_destinazione, stato)
-  RICHIESTA_SANGUE.cf_paziente → PAZIENTE.cf
-  RICHIESTA_SANGUE.id_ospedale_ricovero → OSPEDALE.id
+  cf_paziente → PAZIENTE(cf)
+  id_ospedale_ricovero → OSPEDALE(id)
 
 - TRASFUSIONE(id, data_operazione, id_sacca, id_richiesta)
-  TRASFUSIONE.id_sacca → SACCA.id
-  TRASFUSIONE.id_richiesta → RICHIESTA_SANGUE.id
+  id_sacca → SACCA(id)
+  id_richiesta → RICHIESTA_SANGUE(id)
