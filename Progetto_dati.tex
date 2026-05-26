@@ -83,6 +83,87 @@
 \newpage
 \setcounter{page}{1} % La numerazione delle pagine riparte da 1
 
+\section{Abstract}
+
+In un sistema sanitario che è costantemente alla ricerca di nuovo sangue e plasma per le trasfusioni, una base di dati che garantisce una archiviazione e gestione corretta delle informazioni è essenziale, senza tralasciare sicurezza ed efficienza.
+
+Il progetto ha la finalità di gestire un database sulle donazioni di sangue, dal momento in cui vengono create le singole sacche al momento in cui vengono utilizzate. 
+
+Il sistema distingue i centri prelievi dagli ospedali, permettendo di registrare i prelievi effettuati dai donatori negli appositi centri di raccolta, la creazione delle sacche e la rispettiva locazione, il loro stato di disponibilità e il loro eventuale trasferimento tra ospedali. Ogni sacca può essere utilizzata in una trasfusione, collegata a una specifica richiesta di sangue e a un determinato paziente.
+
+\section{Analisi dei requisiti}
+
+Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
+
+Per poter donare il sangue bisogna iscriversi al database \textbf{donatore}, fornendo le seguenti informazioni:
+
+\begin{itemize}
+    \item Codice fiscale (\textbf{cf}) univoco che lo identifichi
+    \item Un nominativo \textbf{nome} e \textbf{cognome}
+    \item Viene assegnato un \textbf{gruppo sanguigno} [Valori possibili: 'A', 'B', 'AB', '0']
+    \item L'informazione del \textbf{fattore RH} specifica il gruppo sanguigno [Valori possibili: '+', '-']
+    \item Il \textbf{numero di telefono} per contattare il centro o essere contattato
+\end{itemize}
+
+Un donatore può effettuare più prelievi in momenti differenti, può donare sangue intero o plasma a piacimento e in un centro di raccolta non deciso a priori. È possibile effettuare una sola donazione alla volta e di conseguenza generare un \textbf{prelievo} identificato da:
+
+\begin{itemize}
+    \item Un \textbf{id} univoco e sequenziale
+    \item Una \textbf{data} e un orario (precisione al secondo)
+\end{itemize}
+
+Ogni prelievo genera una sola sacca, e viene eseguito in un centro prelievi che rifornisce uno e un solo ospedale. Il \textbf{centro prelievi} ha i seguenti attributi:
+
+\begin{itemize}
+    \item Un \textbf{nome} che può ripetersi solo se riferisce a un diverso ospedale
+    \item Un indirizzo in cui è ubicato. Contiene: \textbf{via, numero civico, CAP, città, provincia}
+\end{itemize}
+
+Il centro prelievi può eseguire più prelievi, e inviare all'ospedale di riferimento la \textbf{sacca} prodotta, il centro del progetto, che è così identificata:
+
+\begin{itemize}
+    \item Ha un univoco \textbf{id} incrementale come da norma europea
+    \item Un \textbf{contenuto} [Valori possibili: 'Sangue intero', 'Plasma']. Ai fini del progetto, il sangue intero non viene diviso nelle sue emocomponenti come nella realtà.
+    \item Un \textbf{gruppo sanguigno} [Valori possibili: 'A', 'B', 'AB', '0']
+    \item Un \textbf{fattore RH} che accompagna il gruppo sanguigno [Valori possibili: '+', '-']
+    \item Una \textbf{data di scadenza} che in questo progetto è 365 giorni per il Plasma, 40 giorni per il Sangue intero
+    \item Uno \textbf{stato della sacca} per tenere traccia della disponibilità [Valori possibili: 'Disponibile', 'In uso', 'Scartata', 'In transito', 'Esaurita']
+\end{itemize}
+
+Una volta prodotta, una sacca può andare incontro a diversi destini, tracciati dallo stato: può essere immagazzinata in un ospedale (Disponibile), essere prenotata per una trasfusione (In uso), scadere o venire arbitrariamente tolta dalle scorte per motivi medici (Scartata), essere oggetto a trasferimento in un altro ospedale (In transito), o essere utilizzata per una trasfusione (Esaurita).
+Di default, viene immediatamente conservata con stato 'Disponibile' nell'ospedale a cui il centro prelievi fa riferimento. Ogni \textbf{ospedale} ha i seguenti attributi:
+
+\begin{itemize}
+    \item Un \textbf{id} univoco
+    \item Un \textbf{nome} che non ha scopi logici
+    \item Un indirizzo per i trasferimenti. Contiene: \textbf{via, numero civico, CAP, città, provincia}
+\end{itemize}
+
+Ogni ospedale ha un proprio deposito per immagazzinare le sacche sovradimensionato rispetto al numero di sacche (non necessario controllare il numero massimo di stoccaggio). Può ricevere o spedire le sacche, ricoverare pazienti e richiedere il sangue. La \textbf{richiesta di sangue} è identificata da:
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+
+\section{Progettazione concettuale}
+\section{Progettazione logica}
+\section{Implementazione PostgreSQL e query}
+\section{Codice C}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Introduzione}
 \label{sec:introduzione}
 Introduzione al progetto, idea ecc...
@@ -94,11 +175,11 @@ Introduzione al progetto, idea ecc...
 \textbf{Attributo} & \textbf{Chiave} & \textbf{Tipo} & \textbf{Vincoli e Dominio} \\
 \midrule
 cf\_donatore & PK & CHAR(16) &  Regex alfanumerico \\
-nome            && VARCHAR(64)  & NOT NULL \\
-cognome          & & VARCHAR(64)  & NOT NULL \\
+nome            && VARCHAR(128) & NOT NULL \\
+cognome          & & VARCHAR(128) & NOT NULL \\
 gruppo\_sanguigno & & ENUM         & Valori: 'A', 'B', 'AB', '0' \\
 fattore\_rh       & & CHAR(1)      & IN ('+', '-') \\
-telefono         & & VARCHAR(15)   & Formato E.164 \\
+numero\_di\_telefono & & VARCHAR(15)  & Formato E.164 \\
 \bottomrule
 \end{tabular}
 \caption{Dizionario dei dati: Entità DONATORE}
