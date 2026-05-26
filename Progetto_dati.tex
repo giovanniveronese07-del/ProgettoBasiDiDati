@@ -1,9 +1,12 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass[10pt, a4paper]{article}
 
 % --- PACCHETTI FONDAMENTALI ---
 \usepackage[utf8]{inputenc}   % Permette di scrivere caratteri accentati direttamente da tastiera
 \usepackage[T1]{fontenc}      % Migliora la qualità dei font nel PDF finale
 \usepackage[italian]{babel}   % Abilita la sillabazione e i termini in italiano (es. "Sezione")
+\usepackage{helvet}           % Font Helvetica (clone standard di Arial in LaTeX)
+\usepackage{courier}          % Sostituisce il font monospazio di default con Courier per il codice
+\renewcommand{\familydefault}{\sfdefault} % Imposta il font senza grazie come predefinito
 
 % --- GEOMETRIA E LAYOUT ---
 \usepackage{geometry}         % Per una facile impostazione dei margini
@@ -17,6 +20,7 @@
 \usepackage{xcolor}           % Per usare i colori (necessario per il codice)
 \usepackage{listings}         % Per inserire blocchi di codice formattati
 \usepackage{booktabs}         % Necessario per \toprule, \midrule e \bottomrule
+\usepackage[normalem]{ulem}   % Per sottolineature avanzate (mantiene intatto \emph)
 
 \title{
     \vspace{-2cm} % Spazio negativo per alzare il titolo
@@ -25,12 +29,10 @@
 }
 \author{
     \large
-    \textbf{Studenti:} \\ Giovanni Veronese \\ Sebastiano Lorenzi \\
-    \vspace{2cm} \\
+    \textbf{Studenti:} \\ Giovanni Veronese \\ Sebastiano Lorenzi \\[2cm]
     \normalsize
-    Prof. Massimiliano de Leoni \\
-    \vspace{0.5cm}
-    Corso di Laurea Informatica \\
+    Prof. Massimiliano de Leoni \\[0.5cm]
+    Corso di Laurea Informatica
 }
 \date{\textbf{Anno Accademico:} 2025-2026}
 
@@ -105,7 +107,9 @@ Per poter donare il sangue bisogna iscriversi al database \textbf{donatore}, for
     \item Il \textbf{numero di telefono} per contattare il centro o essere contattato
 \end{itemize}
 
-Un donatore può effettuare più prelievi in momenti differenti, può donare sangue intero o plasma a piacimento e in un centro di raccolta non deciso a priori. È possibile effettuare una sola donazione alla volta e di conseguenza generare un \textbf{prelievo} identificato da:
+Un donatore può effettuare più prelievi in momenti differenti, può donare sangue intero o plasma a piacimento e in un centro di raccolta non deciso a priori. 
+
+È possibile effettuare una sola donazione alla volta e di conseguenza generare un \textbf{prelievo} identificato da:
 
 \begin{itemize}
     \item Un \textbf{id} univoco e sequenziale
@@ -131,7 +135,9 @@ Il centro prelievi può eseguire più prelievi, e inviare all'ospedale di riferi
 \end{itemize}
 
 Una volta prodotta, una sacca può andare incontro a diversi destini, tracciati dallo stato: può essere immagazzinata in un ospedale (Disponibile), essere prenotata per una trasfusione (In uso), scadere o venire arbitrariamente tolta dalle scorte per motivi medici (Scartata), essere oggetto a trasferimento in un altro ospedale (In transito), o essere utilizzata per una trasfusione (Esaurita).
-Di default, viene immediatamente conservata con stato 'Disponibile' nell'ospedale a cui il centro prelievi fa riferimento. Ogni \textbf{ospedale} ha i seguenti attributi:
+Di default, viene immediatamente conservata con stato 'Disponibile' nell'ospedale a cui il centro prelievi fa riferimento. 
+
+Ogni \textbf{ospedale} ha i seguenti attributi:
 
 \begin{itemize}
     \item Un \textbf{id} univoco
@@ -139,15 +145,83 @@ Di default, viene immediatamente conservata con stato 'Disponibile' nell'ospedal
     \item Un indirizzo per i trasferimenti. Contiene: \textbf{via, numero civico, CAP, città, provincia}
 \end{itemize}
 
-Ogni ospedale ha un proprio deposito per immagazzinare le sacche sovradimensionato rispetto al numero di sacche (non necessario controllare il numero massimo di stoccaggio). Può ricevere o spedire le sacche, ricoverare pazienti e richiedere il sangue. La \textbf{richiesta di sangue} è identificata da:
+Ogni ospedale ha un proprio deposito per immagazzinare le sacche sovradimensionato rispetto al numero di sacche (non necessario controllare il numero massimo di stoccaggio). Può ricevere o spedire le sacche, ricoverare pazienti e richiedere il sangue. Ogni \textbf{richiesta di sangue} è identificata da:
 
 \begin{itemize}
-    \item 
+    \item Un \textbf{id richiesta} univoco e incrementale
+    \item Un \textbf{codice fiscale del medico} che effettua la richiesta, in modo da avere sempre una persona di riferimento
+    \item Un \textbf{codice fiscale del paziente} per il quale viene effettuato l'ordine
+    \item Un \textbf{id ospedale di ricovero} dove verrà effettuata la trasfusione, che corrisponderà alla destinazione dell'eventuale trasferimento
+    \item Una \textbf{data} in cui avviene la richiesta, precisione al secondo
+    \item Una \textbf{quantità di sacche} richiesta, si assume che in unico ordine se le sacche da ordinare sono più di una abbiano lo stesso contenuto, gruppo sanguigno e fattore RH
+    \item Si specifica l'\textbf{emocomponente} [Valori possibili: 'Sangue intero', 'Plasma']
+    \item Un \textbf{reparto} di destinazione per sapere dove verrà utilizato il sangue [Valori possibili: 'Pronto soccorso', 'Chirurgia', 'Oncologia ed ematologia', 'Ostetricia', 'Terapia intensiva e rianimazione', 'Degenza ordinaria']
+    \item Uno \textbf{stato} della richiesta [Valori possibili: 'Non evasa', 'Evasa parzialmente', 'Soddisfatta', 'Annullata'] Default: 'Non evasa'
+\end{itemize}
+
+Il contenuto della sacca viene assegnato in base alle caratteristiche del paziente. La specificazione del reparto serve a tenere ordinate e separate le sacche con stato 'In uso' nel magazzino una volta arrivate. Lo stato si aggiorna in base alla disponibilità in magazzino: quando la richiesta è appena stata inserita viene inserito uno stato di default (Non evasa); se un ordine di più sacche alcune sono già state messe da parte e alcune devono ancora arrivare (Evasa parzialmente); se le sacche sono pronte in magazzino (Soddisfatta) o se si cambia idea e si rendono nuovamente disponibili le sacche (Annullata). 
+
+Ogni richiesta che non ha una giacenza in magazzino porta a un \textbf{trasferimento}, con le seguenti informazioni:
+
+\begin{itemize}
+    \item Un \textbf{id spedizione} univoca e incrementale
+    \item Una \textbf{data di spedizione} in cui lascia fisicamente l'ospedale mittente
+    \item Una \textbf{data di arrivo} in cui arriva all'ospedale destinatario
+\end{itemize}
+
+Ogni trasferimento contiene una sola sacca. Serve a raggiungere la quantità corretta delle sacche richieste che possono poi portare a una \textbf{trasfusione} che ha come attributi:
+
+\begin{itemize}
+    \item \textbf{id trasfusione} univoco e incrementale
+    \item Una \textbf{data} della trasfusione, precisione al secondo
+\end{itemize}
+
+Ogni trasfusione utilizza una sola sacca, e deriva da una richiesta di sangue dalla quale ricava il paziente a cui andrà effettuata la trasfusione. Ogni entità \textbf{paziente} deve fornire gli attributi prima di qualsiasi richiesta:
+
+\begin{itemize}
+    \item Codice fiscale (\textbf{cf}) univoco che lo identifichi
+    \item Un nominativo \textbf{nome} e \textbf{cognome}
+    \item Viene assegnato un \textbf{gruppo sanguigno} [Valori possibili: 'A', 'B', 'AB', '0']
+    \item L'informazione del \textbf{fattore RH} specifica il gruppo sanguigno [Valori possibili: '+', '-']
+\end{itemize}
+
+È possibile che un paziente venga ricoverato in più ospedali nel corso del tempo. Qui si conclude il ciclo di vita utile di una sacca.
+
+\subsection{Schema E-R}
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{"WhatsApp Image 2026-05-06 at 14.30.56.jpeg"}
+    \caption{Schema E-R concettuale del Sistema Informativo}
+    \label{fig:schema_er}
+\end{figure}
+
+\section{Progettazione concettuale}
+
+Dalla Figura \ref{fig:schema_er}, che mostra lo Schema E-R risultato dall’analisi dei requisiti, si ricavano le seguenti tabelle che elencano le entità e le relazioni nel database.
+Entità dello schema E-R:
+
+\begin{itemize}
+    \item \textbf{DONATORE}(\uline{cf}, nome, cognome, gruppo\_sanguigno, fattore\_rh, numero di telefono) rappresenta una persona che può donare
+    \item \textbf{PAZIENTE}(\uline{cf}, nome, cognome, gruppo\_sanguigno, fattore\_rh) rappresenta una persona che può ricevere una rasfusione
+    \item \textbf{OSPEDALE}(\uline{id}, nome, civico, via, citta, provincia, CAP) rappresenta la struttura che immagazzina, invia, riceve sacche e ricovera pazienti
+    \item \textbf{CENTRO\_PRELIEVI}(\uline{nome}, civico, via, città, provincia, CAP) rappresenta il luogo, dipendente da un ospedale, dove vengono raccolti i prelievi
+    \item \textbf{PRELIEVO}(\uline{id}, data\_ora) rappresenta l'atto in cui viene estratto il sangue da un donatore
+    \item \textbf{SACCA}(\uline{id}, contenuto, gruppo\_sanguigno, fattore\_rh, data\_scadenza, stato\_sacca) rappresenta fisicamente la sacca di sangue intero o plasma
+    \item \textbf{RICHIESTA\_SANGUE}(\uline{id}, cf\_medico\_richiedente, data\_richiesta, quantita\_sacche, emocomponente\_richiesto, reparto\_destinazione, stato) rappresenta una richiesta di sacche effettuata da un medico
+    \item \textbf{TRASFERIMENTO}(\uline{id}, data\_spedizione, data\_arrivo) rappresenta la movimentazione logistica di una sacca tra due ospedali
+    \item \textbf{TRASFUSIONE}(\uline{id}, data\_operazione) rappresenta l'intervento conclusivo con cui si utilizza la sacca e termina il ciclo di vita
+\end{itemize}
+
+Oltre alle entità, nello schema concettuale è presente una relazione con attributi propri:
+\begin{itemize}
+    \item \textbf{RICOVERA}(data\_inizio, data\_fine) rappresenta il periodo di permanenza di un paziente all'interno di un ospedale
 \end{itemize}
 
 
-\section{Progettazione concettuale}
 \section{Progettazione logica}
+\subsection{Analisi delle ridondanze}
+\subsection{Eliminazione delle gerarchie}
+
 \section{Implementazione PostgreSQL e query}
 \section{Codice C}
 
@@ -188,7 +262,7 @@ numero\_di\_telefono & & VARCHAR(15)  & Formato E.164 \\
 \subsection{Esempio di Query SQL}
 Esempio di codice SQL
 
-\begin{lstlisting}[caption={Esempio di riquadro in SQL}, label={}]
+\begin{lstlisting}[caption={Esempio a caso di riquadro in SQL}, label={}]
 -- Seleziona il nome del paziente e conta le sue visite
 SELECT
     p.Nome,
