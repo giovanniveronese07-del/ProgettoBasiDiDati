@@ -1,3 +1,24 @@
+DROP TYPE IF EXISTS gruppo_sanguigno_enum CASCADE;
+DROP TYPE IF EXISTS fattore_rh_enum CASCADE;
+DROP TYPE IF EXISTS emocomponente_enum CASCADE;
+DROP TYPE IF EXISTS reparto_enum CASCADE;
+DROP TYPE IF EXISTS stato_richiesta_enum CASCADE;
+DROP TYPE IF EXISTS stato_sacca_enum CASCADE;
+
+DROP TABLE IF EXISTS OSPEDALE CASCADE;
+DROP TABLE IF EXISTS DONATORE CASCADE;
+DROP TABLE IF EXISTS PAZIENTE CASCADE;
+DROP TABLE IF EXISTS RICOVERA CASCADE;
+DROP TABLE IF EXISTS CENTRO_PRELIEVI CASCADE;
+DROP TABLE IF EXISTS PRELIEVO CASCADE;
+DROP TABLE IF EXISTS RICHIESTA_SANGUE CASCADE;
+DROP TABLE IF EXISTS SACCA CASCADE;
+DROP TABLE IF EXISTS TRASFERIMENTO CASCADE;
+DROP TABLE IF EXISTS TRASFUSIONE CASCADE;
+
+
+
+
 CREATE TYPE gruppo_sanguigno_enum AS ENUM ('A', 'B', 'AB', '0');
 CREATE TYPE fattore_rh_enum AS ENUM ('+', '-');
 CREATE TYPE emocomponente_enum AS ENUM ('Sangue intero', 'Plasma');
@@ -484,7 +505,7 @@ INSERT INTO DONATORE (cf, nome, cognome, gruppo_sanguigno, fattore_rh, numero_di
     ('NDTFRN79H14D205X', 'Matteo', 'Pellizzari', '0', '+', '+393475869201'),
     ('TGVLRT91L52M312S', 'Elena', 'Vitali', 'A', '+', '3348576920'),
     ('JSNFHR85M27L219P', 'Alessandro', 'Masi', '0', '+', '+393804958671'),
-    ('RLTFFMR78P05D205W', 'Luca', 'Rizzo', 'A', '-', '3384756291'),
+    ('RLTFMR78P05D205W', 'Luca', 'Rizzo', 'A', '-', '3384756291'),
     ('GPMNSM92R64H501V', 'Giorgia', 'Giordano', '0', '+', '+393495867123'),
     ('ZDRQCN81S49M312X', 'Sabrina', 'Perrone', 'B', '-', '3409827364'),
     ('KTRLRR88T11L219T', 'Federico', 'Lombardo', 'A', '+', '+393338475612'),

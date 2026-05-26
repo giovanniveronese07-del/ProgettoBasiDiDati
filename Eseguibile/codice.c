@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dependencies/include/libpq-fe.h"
-/*
+
 #define PG_HOST "127.0.0.1"
 #define PG_USER "postgres"
-#define PG_DB "BancadelSangue"
-#define PG_PASS ""
-#define PG_PORt 5432*/
+#define PG_DB "BancaDelSangue"
+#define PG_PASS "GiovaVero04."
+#define PG_PORt 5432
 
 #define COL_WIDTH 30
 
@@ -25,7 +25,7 @@ void query5(PGconn *conn);
 
 
 int main(int argc, char **argv){
-
+/*
     //connessione al server
     char PG_host[50];
     char PG_user[50];
@@ -49,8 +49,13 @@ int main(int argc, char **argv){
     scanf("%d", PG_port);
 
     char conninfo[512];
-    sprintf(conninfo,"user=%s password=%s dbname=%s hostaddr=%s port=%d", PG_user, PG_pw, PG_db, PG_host, PG_port);
+    sprintf(conninfo,"user=%s password=%s dbname=%s hostaddr=%s port=%d", PG_user, PG_pw, PG_db, PG_host, PG_port);*/
     
+    //per verifica in locale
+    char conninfo[512];
+    sprintf(conninfo,"user=%s password=%s dbname=%s hostaddr=%s port=%d", PG_USER, PG_PASS, PG_DB, PG_HOST, PG_PORt);
+
+
     PGconn *conn;
     conn = PQconnectdb(conninfo);
 
@@ -66,7 +71,8 @@ int main(int argc, char **argv){
 
     while(1){
         printMenu();
-
+        printf("Inserire la scelta desiderata : ");
+        scanf("%d", &scelta);
         switch(scelta){
 
             case 1:
@@ -103,6 +109,7 @@ int main(int argc, char **argv){
     
 }
 
+//controlla la valididta' della query
 void checkResult(PGresult *res, const PGconn *conn){
     if(PQresultStatus(res) != PGRES_TUPLES_OK){
         printf("Risultati inconsistenti %s\n", PQerrorMessage(conn));
@@ -116,22 +123,24 @@ void do_exit(PGconn *conn){
     exit(1);
 }
 
+//visualizza il menu'
 void printMenu(){
     printf("\n====== MENU QUERY ======\n");
     printf("1. Gruppi sanguigni sotto soglia minima per ospedale\n");
     printf("2. Distribuzione delle scorte per provincia\n");
-    printf("3. Sacche prossime alla scadenza\n");
-    printf("4. Tipi di sangue più richiesti per città\n");
-    printf("5. Ospedali con più richieste non evase\n");
+    printf("3. Visualizza il reparto che ha utilizzato piu' sacche\n");
+    printf("4. Donatori con piu' donazioni per gruppo sanguigno\n");
+    printf("5. Ospedali che ricevono piu' sacche di quante ne spediscono\n");
     printf("0. Esci\n");
 }
 
+//Controllare gli ospedali con il numero di sacche inferiore ad un limite imposto da utente
 void query1(PGconn *conn) {
     PGresult *res;
     //creazione query
     char *query =
         "SELECT o.nome, s.gruppo_sanguigno, s.fattore_rh, COUNT(*) AS numero_sacche "
-        "FROM sacca s JOIN ospedale o ON s.id_ospedale = o.id "
+        "FROM SACCA s JOIN OSPEDALE o ON s.id_ospedale = o.id "
         "WHERE s.stato_sacca = 'Disponibile' "
         "GROUP BY o.nome, s.gruppo_sanguigno, s.fattore_rh "
         "HAVING COUNT(*) < $1 "
@@ -161,40 +170,103 @@ void query1(PGconn *conn) {
     //eseguo la query
     res = PQexecPrepared(conn, "query1", 1, paramValues, NULL, NULL, 0);
 
-    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        printf("Errore nell'esecuzione della query: %s\n", PQerrorMessage(conn));
-        PQclear(res);
-        return;
-    }
+    checkResult(res, conn);
 
     //stampo il risultato
     printResult(res);
     PQclear(res);
 }
 
+//Seleziona la quantita' di sacche per provincia divise per gruppo
 void query2(PGconn *conn){
     PGresult *res;
 
     char *query = 
-        "SELECT o.provincia, s.gruppo_sanguigno, fattore_rh, COUNT(*) AS num_scorte"
-        "FROM ospedale o JOIN sacca s ON o.id = s.id_ospedale"
-        "WHERE s.stato = 'disponibile'"
-        "GROUP BY o.provincia, s.gruppo_sanguigno, fattore_rh"
-        "ORDER BY o.provincia, s.gruppo_sanguigno, fattore_rh;";
+        "SELECT o.provincia, s.gruppo_sanguigno, fattore_rh, COUNT(*) AS num_scorte "
+        "FROM OSPEDALE o JOIN SACCA s ON o.id = s.id_ospedale "
+        "WHERE s.stato_sacca = 'Disponibile' "
+        "GROUP BY o.provincia, s.gruppo_sanguigno, fattore_rh "
+        "ORDER BY o.provincia, s.gruppo_sanguigno, fattore_rh; ";
 
     res = PQexec(conn,query);
-
+    checkResult(res, conn);
+    
     printResult(res);
 
     PQclear(res);
 }
 
-void query3(PGconn *conn){}
-void query4(PGconn *conn){}
-void query5(PGconn *conn){}
+//restituisce l'id il nome ed il reparto che ha utilizzato piu' sangue
+void query3(PGconn *conn){
+    PGresult *res;
+    
+    char *query =
+          "DROP VIEW IF EXISTS num_sacche_reparto; "
+          "CREATE VIEW num_sacche_reparto AS "
+          "SELECT o.id, o.nome, rs.reparto_destinazione, SUM(rs.quantita_sacche) AS Num_sacche "
+          "FROM RICHIESTA_SANGUE rs JOIN OSPEDALE o ON rs.id_ospedale_ricovero = o.id "
+          "GROUP BY o.id, o.nome, rs.reparto_destinazione "
+          "ORDER BY Num_sacche DESC; "
+          "SELECT id, nome, reparto_destinazione, Num_sacche "
+          "FROM num_sacche_reparto "
+          "WHERE Num_sacche = (SELECT MAX(Num_sacche) FROM num_sacche_reparto); ";
+          
+    res = PQexec(conn, query);
+    checkResult(res, conn);
+    
+    printResult(res);
+    
+    PQclear(res);
+}
+
+//trova tutti i donatori dui un determinato gruppo sanguigno che hanno donato di piu'
+void query4(PGconn *conn){
+    PGresult *res;
+    
+    char *query =
+        "DROP VIEW IF EXISTS donazioni_per_donatore; "
+        "CREATE VIEW donazioni_per_donatore AS "
+        "SELECT d.cf, d.nome, d.cognome, d.gruppo_sanguigno, d.fattore_rh, COUNT(p.id) AS numero_prelievi "
+        "FROM DONATORE d JOIN PRELIEVO p ON d.cf = p.cf_donatore "
+        "GROUP BY d.cf, d.nome, d.cognome, d.gruppo_sanguigno, d.fattore_rh; "
+	    "SELECT * "
+        "FROM donazioni_per_donatore d1 " 
+        "WHERE numero_prelievi =(SELECT MAX(d2.numero_prelievi) "
+        "FROM donazioni_per_donatore d2 "
+        "WHERE d2.gruppo_sanguigno = d1.gruppo_sanguigno "
+        "AND d2.fattore_rh = d1.fattore_rh) "
+        "ORDER BY gruppo_sanguigno, fattore_rh; ";
+          
+    res = PQexec(conn, query);
+    checkResult(res, conn);
+    
+    printResult(res);
+    
+    PQclear(res);
+}
+
+//trova il nome degli ospedali che ricevono piu' sacche di quante ne spediscono
+void query5(PGconn *conn){
+    PGresult *res;
+    
+    char *query =
+        "SELECT o.id, o.nome, COUNT(t_in.id_sacca) AS sacche_ricevute, COUNT(t_out.id_sacca) AS sacche_spedite, COUNT(t_in.id_sacca) - COUNT(t_out.id_sacca) AS differenza "
+        "FROM ospedale o LEFT JOIN TRASFERIMENTO t_in ON o.id = t_in.id_ospedale_mittente "
+        "LEFT JOIN TRASFERIMENTO t_out ON o.id = t_out.id_ospedale_destinatario "
+        "GROUP BY o.id, o.nome "
+        "HAVING COUNT(t_in.id_sacca) > COUNT(t_out.id_sacca) "
+        "ORDER BY differenza DESC; ";
+          
+    res = PQexec(conn, query);
+    checkResult(res, conn);
+    
+    printResult(res);
+    
+    PQclear(res);
+}
 
 
-
+//stampa il risultato
 void printResult(PGresult *res){
 
     //trovo il numero di tuple e campi selezionati
