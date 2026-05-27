@@ -130,7 +130,7 @@ void printMenu(){
     printf("2. Distribuzione delle scorte per provincia\n");
     printf("3. Visualizza il reparto che ha utilizzato piu' sacche\n");
     printf("4. Donatori con piu' donazioni per gruppo sanguigno\n");
-    printf("5. Ospedali che ricevono piu' sacche di quante ne spediscono\n");
+    printf("5. Ospedali che hanno piu' trasferimenti in entrata che in uscita\n");
     printf("0. Esci\n");
 }
 
@@ -245,7 +245,7 @@ void query4(PGconn *conn){
     PQclear(res);
 }
 
-//trova il nome degli ospedali che ricevono piu' sacche di quante ne spediscono
+//Trovare gli ospedali che hanno piu' trasferimenti in entrata che in uscita
 void query5(PGconn *conn){
     PGresult *res;
     
